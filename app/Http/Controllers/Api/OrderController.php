@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\ApiController;
 use App\Models\Order;
 use App\Models\Agent;
+use App\Models\OrderItem;
 use Auth;
 
 class OrderController extends ApiController
@@ -68,6 +69,7 @@ class OrderController extends ApiController
                 'agent_id'            => $agent->id,
                 'take_order'          => date("Y-m-d"),
                 'agent_arrival_time'  => $data->rows[0]->elements[0]->duration->text,
+                'status'              => 'on progress'
             ]);
 
            return $this->respondSuccess($order);
@@ -77,5 +79,56 @@ class OrderController extends ApiController
         }
 
 
+    }
+
+    public function doneOrder($order_id,Request $request)
+    {
+        $subTotal = $this->subTotal($request);
+
+        $order = $this->order->find($order_id);
+        $order->update([
+            'done_date' => date("Y-m-d"),
+            'total' => $subTotal,
+            'status' => 'done'
+        ]);
+
+        $items = $request->items;
+
+
+
+        foreach ($items as $item) {
+            $orderItem =  new OrderItem;
+
+            $orderItem->create([
+                'order_id' => $order_id,
+                'name' => $item['name'],
+                'price' => $item['price']
+            ]);
+        }
+
+
+        return $order;
+    }
+
+
+    public function show($order_id)
+    {
+         $order = $this->order->with('orderItem')->find($order_id);
+
+         return $order;
+    }
+
+    public function subTotal(Request $request)
+    {
+        $items = $request->items;
+
+        $total = 0;
+
+        foreach ($items as $item) {
+
+            $total = $total + $item['price'];
+        }
+
+        return $total;
     }
 }

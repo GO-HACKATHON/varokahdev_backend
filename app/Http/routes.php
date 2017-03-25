@@ -23,9 +23,11 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'] , function() {
         Route::get('service/{id}/agent','ServiceController@showAgent');
 
         Route::post('order','OrderController@order');
+        Route::get('order/{order_id}/show','OrderController@show');
 
         Route::group(['middleware' => 'role:agent' ], function() {
               Route::post('order/{order_id}/take','OrderController@takeOrder');
+              Route::post('order/{order_id}/done','OrderController@doneOrder');
         });
 
         Route::post('users/set-location','UserController@setLocation');

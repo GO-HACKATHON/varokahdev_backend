@@ -22,4 +22,9 @@ class Order extends Model
         'status',
         'agent_arrival_time'
     ];
+
+    public function orderItem()
+    {
+        return $this->hasMany('App\Models\OrderItem');
+    }
 }
