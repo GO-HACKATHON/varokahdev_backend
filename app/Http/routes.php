@@ -12,7 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $user= Auth::user();
+
+    dd($user->hasRole('admin'));
+
+
 });
 
 
@@ -21,4 +25,16 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'] , function() {
     Route::post('auth/login','AuthController@login');
     Route::post('auth/register','AuthController@register');
 
+});
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
+
+
+
+Route::group(['middleware' => 'role:admin'], function () {
+    Route::get('admin', function() {
+        return 'Hallo admin';
+    });
 });

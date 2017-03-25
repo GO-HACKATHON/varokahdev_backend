@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\Permissions\HasPermissionsTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\Request;
 
 class User extends Authenticatable
 {
+    use HasPermissionsTrait;
     /**
      * The attributes that are mass assignable.
      *
