@@ -15,7 +15,7 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next,$role)
     {
-        if (!$request->user()->hasRole($role)) {
+        if (auth('api')->user()->hasRole($role)) {
             $response = [
                 'status_code' => 401,
                 'status_message' => 'anda tidak memliki hak akses',

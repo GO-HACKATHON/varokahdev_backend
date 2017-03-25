@@ -26,7 +26,7 @@ class AuthController extends ApiController
         ]);
 
         if($this->user->login($request)){
-            return $this->respondSuccess(Auth::guard('user')->user());
+            return $this->respondSuccess(Auth::user());
         }else{
             return $this->respondUnauthorizedError('password/email anda salah');
         }

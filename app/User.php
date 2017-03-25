@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Permissions\HasPermissionsTrait;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -14,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','phone','status','lat','lng'
     ];
 
     /**
@@ -35,5 +37,19 @@ class User extends Authenticatable
                 'phone'    => $request->phone,
                 'api_token' => str_random(40),
             ]);
+    }
+
+    public function login(Request $request)
+    {
+        $credential = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        if(Auth::attempt($credential)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

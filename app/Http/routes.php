@@ -11,19 +11,32 @@
 |
 */
 
-Route::get('/', function () {
-    $user= Auth::user();
-
-    dd($user->hasRole('admin'));
-
-
-});
-
 
 Route::group(['prefix' => 'api', 'namespace' => 'Api'] , function() {
     /*----------  Auth  ----------*/
     Route::post('auth/login','AuthController@login');
     Route::post('auth/register','AuthController@register');
+
+    Route::group(['middleware' => 'auth:api'], function() {
+        /* Api List service */
+        Route::get('service','ServiceController@index');
+        Route::get('service/{id}/agent','ServiceController@showAgent');
+
+        Route::post('order','OrderController@order');
+
+        Route::group(['middleware' => 'role:agent' ], function() {
+              Route::post('order/{order_id}/take','OrderController@takeOrder');
+        });
+
+
+
+        Route::post('users/set-location','UserController@setLocation');
+        Route::post('agent/{id}/set-location','AgentController@setLocation');
+
+    });
+
+
+
 
 });
 
