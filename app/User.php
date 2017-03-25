@@ -6,6 +6,7 @@ use App\Permissions\HasPermissionsTrait;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
+use App\Role;
 
 class User extends Authenticatable
 {
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','phone','status','lat','lng'
+        'name', 'email', 'password','phone','status','lat','lng','api_token'
     ];
 
     /**
@@ -30,13 +31,20 @@ class User extends Authenticatable
 
     public function register(Request $request)
     {
-        return self::create([
+        $user = self::create([
                 'email'     => $request->email,
                 'name'      => $request->name,
                 'password'  => bcrypt($request->password),
                 'phone'    => $request->phone,
                 'api_token' => str_random(40),
             ]);
+
+        $role = Role::find(2);
+
+
+        $user->roles()->save($role);
+
+        return $user;
     }
 
     public function login(Request $request)

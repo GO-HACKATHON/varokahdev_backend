@@ -28,8 +28,6 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'] , function() {
               Route::post('order/{order_id}/take','OrderController@takeOrder');
         });
 
-
-
         Route::post('users/set-location','UserController@setLocation');
         Route::post('agent/{id}/set-location','AgentController@setLocation');
 
