@@ -36,6 +36,7 @@ class ServiceController extends ApiController
         $agents = $this->agent
                         ->selectRaw("*,( 6371 * acos( cos( radians($lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat ) ) ) ) AS distance")
                         ->having("distance", "<", 5)
+                        ->where('service_id',$id)
                         ->get();
 
          return $this->respondSuccess($agents);
