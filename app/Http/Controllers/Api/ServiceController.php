@@ -39,7 +39,15 @@ class ServiceController extends ApiController
                         ->where('service_id',$id)
                         ->get();
 
-         return $this->respondSuccess($agents);
+
+        if (count($agents) > 0){
+            return $this->respondSuccess($agents);
+        }else{
+            return  response()->json(['status_code'=>404],404);
+        }
+
+
+
 
     }
 }
